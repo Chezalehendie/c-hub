@@ -1,6 +1,6 @@
 const post = {
     id: "",
-creator:"",
+creator:"hendrina",
 comments:"",
 name:"",
 imageURL:"",

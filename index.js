@@ -11,9 +11,9 @@ const dbConnection = require('./src/utils/mysql.connector')
 const {post} = require('./src/posts/post.model')
 
 // update existing post
-app.patch('/api/v1/posts:id', function( request, response){
+app.patch('/api/v1/posts/:id', function(request, response){
     //console.log (request.params)
-    //get id fromm request, use id to select a post from db, update post and request
+    //get id from request, use id to select a post from db, update post and request
     const sql = `SELECT * FROM posts WHERE id=${request.params.id} LIMIT 1`
 
     return dbConnection.query(sql, function (err, rows){
@@ -44,16 +44,26 @@ app.patch('/api/v1/posts:id', function( request, response){
                 })
             }
         })
-
     })
+
 //delete existing post
 app.delete('/api/v1/posts/:id',(req,res)=>{
-    //grab id from req object, check if posts with id exists, if yes, delete and return response to client
+    //grab id from request object, check if posts with id exists, if yes, delete and return response to client
+    const deleteQuery = `SELECT * FROM posts WHERE id = ${req.params.id} LIMIT 1`
 
+    dbConnection.query(deleteQuery,(err, result)=>{
+        if(err) throw err
+        
+    return res.status(200).json({
+        status:true,
+        statusCode:200,
+        message: "user deleted successfully",
+        data:result
+    })
+  })
 })
+
 //fetching a single post from the db, sending to client app 
-
-
 app.get('/api/v1/posts/:id',function(req,res){
     //console.log (req.params)
     //grab id from req.params.id, query db if this post(id) exist, return to the client app(web client)
